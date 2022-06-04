@@ -1,7 +1,7 @@
-import { notiondb } from './notiondb';
+// import { notiondb } from './notiondb';
 
-describe('notiondb', () => {
-  it('should work', () => {
-    expect(notiondb()).toEqual('notiondb');
-  });
-});
+// describe('notiondb', () => {
+//   it('should work', () => {
+//     expect(notiondb()).toEqual('notiondb');
+//   });
+// });

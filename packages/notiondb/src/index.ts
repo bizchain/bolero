@@ -1,1 +1,2 @@
-export * from './lib/notiondb';
+export * from './lib/notion.d'
+export * from './lib/notiondb'
