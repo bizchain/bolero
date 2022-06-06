@@ -4,6 +4,16 @@ import type {
   GetBlockResponse,
   GetPageResponse,
   ListBlockChildrenResponse,
+  PropertyValueCheckbox,
+  PropertyValueDate,
+  PropertyValueEmail,
+  PropertyValueMultiSelect,
+  PropertyValueNumber,
+  PropertyValuePhoneNumber,
+  PropertyValueRichText,
+  PropertyValueSelect,
+  PropertyValueTitle,
+  PropertyValueUrl,
   QueryDatabaseResponse,
   UpdateBlockResponse,
   UpdatePageResponse
@@ -44,16 +54,6 @@ export async function queryDatabase(headers: TApiHeaders, databaseId: string, bo
 
   return res as QueryDatabaseResponse
 }
-
-/************************************************************************************************
- * 
- * PAGES
- * - create new user
- * - create new ticket
- * - create new ticket reply
- * - ....
- * 
- ************************************************************************************************/
 
 export async function createPage(headers: TApiHeaders, databaseId: string, body: string): Promise<CreatePageResponse> {
   /**
@@ -174,43 +174,6 @@ export async function updateBlock(headers: TApiHeaders, blockId: string, body: s
   return res as UpdateBlockResponse
 }
 
-export async function addParagraphBlocks(headers: TApiHeaders, pageId: string, chunks: string[]): Promise<BlockObjectResponse[]> {
-  const content = JSON.stringify({
-    "children": chunks.map(chunk => ({
-      "object": "block",
-      "type": "paragraph",
-      "paragraph": {
-        "rich_text": [
-          {
-            "type": "text",
-            "text": {
-              "content": chunk,
-              "link": null
-            }
-          }
-        ]
-      }
-    }))
-  })
-  const response = await addBlocks(headers, pageId, content)
-  return response
-}
-
-export async function updateParagraphBlock(headers: TApiHeaders, blockId: string, content: string): Promise<UpdateBlockResponse> {
-  /**
-   * https://developers.notion.com/reference/update-a-block
-   */
-  const body = JSON.stringify({
-    "paragraph": {
-      "rich_text": [
-        { "text": { "content": content } }
-      ]
-    }
-  })
-  const updateRes = await updateBlock(headers, blockId, body)
-  return updateRes
-}
-
 /**
  * Delete one or more blocks
  */
@@ -226,4 +189,125 @@ export async function deleteBlocks(headers: TApiHeaders, blockIds: string[]) {
     }))))
 
   return deletedBlocks
+}
+
+/**
+ * Block Body
+ */
+
+export function newPlainTextBlocks(texts: string[]) {
+  const content = {
+    "children": texts.map(text => ({
+      "object": "block",
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": text,
+              "link": null
+            }
+          }
+        ]
+      }
+    }))
+  }
+  return JSON.stringify(content)
+}
+
+// export async function addParagraphBlocks(headers: TApiHeaders, pageId: string, chunks: string[]): Promise<BlockObjectResponse[]> {
+//   const content = JSON.stringify({
+//     "children": chunks.map(chunk => ({
+//       "object": "block",
+//       "type": "paragraph",
+//       "paragraph": {
+//         "rich_text": [
+//           {
+//             "type": "text",
+//             "text": {
+//               "content": chunk,
+//               "link": null
+//             }
+//           }
+//         ]
+//       }
+//     }))
+//   })
+//   const response = await addBlocks(headers, pageId, content)
+//   return response
+// }
+
+export function updatePlainTextBlock(text: string) {
+  const content = {
+    "paragraph": {
+      "rich_text": [
+        { "text": { "content": text } }
+      ]
+    }
+  }
+  return JSON.stringify(content)
+}
+
+
+// export async function updateParagraphBlock(headers: TApiHeaders, blockId: string, content: string): Promise<UpdateBlockResponse> {
+//   /**
+//    * https://developers.notion.com/reference/update-a-block
+//    */
+//   const body = JSON.stringify({
+//     "paragraph": {
+//       "rich_text": [
+//         { "text": { "content": content } }
+//       ]
+//     }
+//   })
+//   const updateRes = await updateBlock(headers, blockId, body)
+//   return updateRes
+// }
+
+/**
+ * Extract page property data
+ */
+
+export function getPageTitleValue(value: PropertyValueTitle): string {
+  return value.title[0]?.plain_text ?? ""
+}
+
+export function getParagraphPlainText(value: PropertyValueRichText): string {
+  return value.rich_text.reduce((all, current) => {
+    return all.concat(" " + current.plain_text)
+  }, "")
+
+}
+
+export function getSelectValue(value: PropertyValueSelect): string {
+  return value?.select?.name ?? ""
+}
+
+export function getMultiSelectValue(value: PropertyValueMultiSelect): string[] {
+  return value.multi_select.map(item => item.name)
+}
+
+export function getEmailValue(value: PropertyValueEmail): string {
+  return value?.email ?? ""
+}
+
+export function getPhoneValue(value: PropertyValuePhoneNumber): string {
+  return value?.phone_number ?? ""
+}
+
+export function getCheckboxValue(value: PropertyValueCheckbox): boolean {
+  return value.checkbox
+}
+
+export function getDateValue(value: PropertyValueDate): string {
+  return value?.date?.start ?? ""
+}
+
+export function getNumberValue(value: PropertyValueNumber): number | null {
+  return value.number
+}
+
+export function getUrlValue(value: PropertyValueUrl): string {
+  return value.url ?? ""
 }
