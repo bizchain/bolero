@@ -280,8 +280,8 @@ export function getParagraphPlainText(value: PropertyValueRichText): string {
 
 }
 
-export function getSelectValue(value: PropertyValueSelect): string {
-  return value?.select?.name ?? ""
+export function getSelectValue(value: PropertyValueSelect): string | undefined {
+  return value?.select?.name
 }
 
 export function getMultiSelectValue(value: PropertyValueMultiSelect): string[] {
@@ -310,4 +310,53 @@ export function getNumberValue(value: PropertyValueNumber): number | null {
 
 export function getUrlValue(value: PropertyValueUrl): string {
   return value.url ?? ""
+}
+
+export function queryTitle(value: string) {
+  return {
+    "title": [{ "text": { "content": value } }]
+  }
+}
+
+export function queryRichtext(value: string) {
+  return {
+    "rich_text": [{ "text": { "content": value } }]
+  }
+}
+
+export function querySelect(value: string) {
+  return {
+    "select": { "name": value }
+  }
+}
+
+export function queryNumber(value: number) {
+  return {
+    "number": value
+  }
+}
+
+export function filterRichtext({ propertyName, content, timestamp, direction }: {
+  propertyName: string
+  content: string
+  timestamp?: "created_time" | "last_edited_time"
+  direction?: "descending" | "ascending"
+}) {
+  const queryObj: { [key: string]: any } = {}
+
+  queryObj["filter"] = {
+    "property": propertyName,
+    "rich_text": { "equals": content }
+  }
+
+  if (timestamp && direction) {
+    queryObj["sorts"] = [
+      {
+        "timestamp": timestamp,
+        "direction": direction
+      }
+    ]
+  }
+
+  return JSON.stringify(queryObj)
 }
