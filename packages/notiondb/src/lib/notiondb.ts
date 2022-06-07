@@ -336,8 +336,38 @@ export function queryNumber(value: number) {
   }
 }
 
-export function filterRichtext({ propertyName, content, timestamp, direction }: {
+export function queryEmail(value: string) {
+  return {
+    "email": value
+  }
+}
+
+export function queryCheckbox(value: boolean) {
+  return {
+    "checkbox": value
+  }
+}
+
+export function queryPhoneNumber(value: string) {
+  return {
+    "phone_number": value
+  }
+}
+
+/**
+ * value in format "28-11-1986" (day-month-year)
+ */
+export function querySingleDate(value: string) {
+  return {
+    "date": {
+      "start": value 
+    }
+  }
+}
+
+export function filterRichtext({ propertyName, condition, content, timestamp, direction }: {
   propertyName: string
+  condition: "equals" | "does_not_equal" | "contains" | "does_not_contain" | "starts_with" | "ends_with" | "is_empty" | "is_not_empty"
   content: string
   timestamp?: "created_time" | "last_edited_time"
   direction?: "descending" | "ascending"
@@ -346,7 +376,7 @@ export function filterRichtext({ propertyName, content, timestamp, direction }: 
 
   queryObj["filter"] = {
     "property": propertyName,
-    "rich_text": { "equals": content }
+    "rich_text": { [condition]: content }
   }
 
   if (timestamp && direction) {
