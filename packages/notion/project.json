@@ -1,30 +1,30 @@
 {
   "$schema": "..\\..\\node_modules\\nx\\schemas\\project-schema.json",
-  "sourceRoot": "packages/notiondb/src",
+  "sourceRoot": "packages/notion/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/notiondb",
-        "main": "packages/notiondb/src/index.ts",
-        "tsConfig": "packages/notiondb/tsconfig.lib.json",
-        "assets": ["packages/notiondb/*.md"]
+        "outputPath": "dist/packages/notion",
+        "main": "packages/notion/src/index.ts",
+        "tsConfig": "packages/notion/tsconfig.lib.json",
+        "assets": ["packages/notion/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/notiondb/**/*.ts"]
+        "lintFilePatterns": ["packages/notion/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/notiondb"],
+      "outputs": ["coverage/packages/notion"],
       "options": {
-        "jestConfig": "packages/notiondb/jest.config.ts",
+        "jestConfig": "packages/notion/jest.config.ts",
         "passWithNoTests": true
       }
     }

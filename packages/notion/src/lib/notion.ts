@@ -17,7 +17,7 @@ import type {
   QueryDatabaseResponse,
   UpdateBlockResponse,
   UpdatePageResponse
-} from "./notion.d"
+} from "./notion-type"
 
 type TApiHeaders = {
   "Authorization": string
@@ -25,6 +25,12 @@ type TApiHeaders = {
   "Content-Type": string
 }
 
+/**
+ * 
+ * @param NOTION_API_KEY 
+ * @param NOTION_VERSION 
+ * @returns 
+ */
 export function apiHeaders(NOTION_API_KEY: string, NOTION_VERSION = "2022-02-22") {
   return <TApiHeaders>{
     "Authorization": `Bearer ${NOTION_API_KEY}`,
@@ -33,16 +39,17 @@ export function apiHeaders(NOTION_API_KEY: string, NOTION_VERSION = "2022-02-22"
   }
 }
 
-/************************************************************************************************
+/**
  * 
- * 	DATABASE
+ * @param headers 
+ * @param databaseId 
+ * @param body 
+ * @returns 
  * 
- ************************************************************************************************/
-
+ * Docs:
+ * - https://developers.notion.com/reference/post-database-query
+ */
 export async function queryDatabase(headers: TApiHeaders, databaseId: string, body?: string): Promise<QueryDatabaseResponse> {
-  /**
-   * https://developers.notion.com/reference/post-database-query
-   */
   const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
     method: "POST",
     headers: headers,
@@ -55,11 +62,18 @@ export async function queryDatabase(headers: TApiHeaders, databaseId: string, bo
   return res as QueryDatabaseResponse
 }
 
+/**
+ * 
+ * @param headers 
+ * @param databaseId 
+ * @param body 
+ * @returns 
+ * 
+ * Docs:
+ * - https://api.notion.com/v1/pages
+ * - https://developers.notion.com/reference/post-page
+ */
 export async function createPage(headers: TApiHeaders, databaseId: string, body: string): Promise<CreatePageResponse> {
-  /**
-   * https://api.notion.com/v1/pages
-   * https://developers.notion.com/reference/post-page
-   */
   const response = await fetch("https://api.notion.com/v1/pages", {
     method: "POST",
     headers: headers,
@@ -73,12 +87,15 @@ export async function createPage(headers: TApiHeaders, databaseId: string, body:
 }
 
 /**
- * get page properties, not its content
+ * Get page properties, not its content
+ * @param headers 
+ * @param pageId 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/retrieve-a-page
  */
 export async function getPage(headers: TApiHeaders, pageId: string): Promise<GetPageResponse> {
-  /**
-   * https://developers.notion.com/reference/retrieve-a-page
-   */
   const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
     method: "GET",
     headers: headers
@@ -90,10 +107,17 @@ export async function getPage(headers: TApiHeaders, pageId: string): Promise<Get
   return res as GetPageResponse
 }
 
+/**
+ * 
+ * @param headers 
+ * @param pageId 
+ * @param body 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/patch-page
+ */
 export async function updatePageProperties(headers: TApiHeaders, pageId: string, body: string): Promise<UpdatePageResponse> {
-  /**
-   * https://developers.notion.com/reference/patch-page
-   */
   const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
     method: "PATCH",
     headers: headers,
@@ -106,10 +130,16 @@ export async function updatePageProperties(headers: TApiHeaders, pageId: string,
   return res as UpdatePageResponse
 }
 
+/**
+ * 
+ * @param headers 
+ * @param pageId 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/get-block-children
+ */
 export async function getPageContent(headers: TApiHeaders, pageId: string): Promise<ListBlockChildrenResponse> {
-  /**
-   * https://developers.notion.com/reference/get-block-children
-   */
   const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
     method: "GET",
     headers: headers
@@ -121,16 +151,16 @@ export async function getPageContent(headers: TApiHeaders, pageId: string): Prom
   return res as ListBlockChildrenResponse
 }
 
-/************************************************************************************************
+/**
  * 
- * 	BLOCKS
+ * @param headers 
+ * @param blockId 
+ * @returns 
  * 
- ************************************************************************************************/
-
+ * Docs:
+ * - https://developers.notion.com/reference/retrieve-a-block
+ */
 export async function getBlock(headers: TApiHeaders, blockId: string): Promise<GetBlockResponse> {
-  /**
-   * https://developers.notion.com/reference/retrieve-a-block
-   */
   const response = await fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
     method: "GET",
     headers: headers
@@ -142,10 +172,17 @@ export async function getBlock(headers: TApiHeaders, blockId: string): Promise<G
   return res as GetBlockResponse
 }
 
+/**
+ * 
+ * @param headers 
+ * @param pageId 
+ * @param body 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/update-a-block
+ */
 export async function addBlocks(headers: TApiHeaders, pageId: string, body: string): Promise<BlockObjectResponse[]> {
-  /**
-   * https://developers.notion.com/reference/update-a-block
-   */
   const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
     method: "PATCH",
     headers: headers,
@@ -158,10 +195,17 @@ export async function addBlocks(headers: TApiHeaders, pageId: string, body: stri
   return (res as ListBlockChildrenResponse).results
 }
 
+/**
+ * 
+ * @param headers 
+ * @param blockId 
+ * @param body 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/update-a-block
+ */
 export async function updateBlock(headers: TApiHeaders, blockId: string, body: string): Promise<UpdateBlockResponse> {
-  /**
-   * https://developers.notion.com/reference/update-a-block
-   */
   const response = await fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
     method: "PATCH",
     headers: headers,
@@ -176,12 +220,14 @@ export async function updateBlock(headers: TApiHeaders, blockId: string, body: s
 
 /**
  * Delete one or more blocks
+ * @param headers 
+ * @param blockIds 
+ * @returns 
+ * 
+ * Docs:
+ * - https://developers.notion.com/reference/delete-a-block
  */
 export async function deleteBlocks(headers: TApiHeaders, blockIds: string[]) {
-  /**
-  * https://developers.notion.com/reference/delete-a-block
-  */
-
   const deletedBlocks = await Promise.all(blockIds.map(blockId => (
     fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
       method: "DELETE",
@@ -192,9 +238,10 @@ export async function deleteBlocks(headers: TApiHeaders, blockIds: string[]) {
 }
 
 /**
- * Block Body
+ * 
+ * @param texts 
+ * @returns 
  */
-
 export function newPlainTextBlocks(texts: string[]) {
   const content = {
     "children": texts.map(text => ({
@@ -238,6 +285,11 @@ export function newPlainTextBlocks(texts: string[]) {
 //   return response
 // }
 
+/**
+ * 
+ * @param text 
+ * @returns 
+ */
 export function updatePlainTextBlock(text: string) {
   const content = {
     "paragraph": {
@@ -269,85 +321,172 @@ export function updatePlainTextBlock(text: string) {
  * Extract page property data
  */
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getPageTitleValue(value: PropertyValueTitle): string {
-  return value.title[0]?.plain_text ?? ""
+  return value?.title[0]?.plain_text ?? ""
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getParagraphPlainText(value: PropertyValueRichText): string {
+  if (value === undefined) return ""
   return value.rich_text.reduce((all, current) => {
-    return all.concat(" " + current.plain_text)
+    return all.concat((all.length ? " " : "") + current.plain_text)
   }, "")
 
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getSelectValue(value: PropertyValueSelect): string | undefined {
   return value?.select?.name
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getMultiSelectValue(value: PropertyValueMultiSelect): string[] {
+  if (value === undefined) return []
   return value.multi_select.map(item => item.name)
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getEmailValue(value: PropertyValueEmail): string {
   return value?.email ?? ""
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getPhoneValue(value: PropertyValuePhoneNumber): string {
   return value?.phone_number ?? ""
 }
 
-export function getCheckboxValue(value: PropertyValueCheckbox): boolean {
-  return value.checkbox
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
+export function getCheckboxValue(value: PropertyValueCheckbox): boolean | undefined {
+  return value?.checkbox
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getDateValue(value: PropertyValueDate): string {
   return value?.date?.start ?? ""
 }
 
-export function getNumberValue(value: PropertyValueNumber): number | null {
-  return value.number
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
+export function getNumberValue(value: PropertyValueNumber): number | undefined {
+  return value?.number ?? undefined
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function getUrlValue(value: PropertyValueUrl): string {
-  return value.url ?? ""
+  return value?.url ?? ""
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryTitle(value: string) {
   return {
     "title": [{ "text": { "content": value } }]
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryRichtext(value: string) {
   return {
     "rich_text": [{ "text": { "content": value } }]
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function querySelect(value: string) {
   return {
     "select": { "name": value }
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryNumber(value: number) {
   return {
     "number": value
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryEmail(value: string) {
   return {
     "email": value
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryCheckbox(value: boolean) {
   return {
     "checkbox": value
   }
 }
 
+/**
+ * 
+ * @param value 
+ * @returns 
+ */
 export function queryPhoneNumber(value: string) {
   return {
     "phone_number": value
@@ -355,7 +494,9 @@ export function queryPhoneNumber(value: string) {
 }
 
 /**
- * value in format "28-11-1986" (day-month-year)
+ * 
+ * @param value value in format "28-11-1986" (day-month-year)
+ * @returns 
  */
 export function querySingleDate(value: string) {
   return {
@@ -365,6 +506,11 @@ export function querySingleDate(value: string) {
   }
 }
 
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
 export function filterRichtext({ propertyName, condition, content, timestamp, direction }: {
   propertyName: string
   condition: "equals" | "does_not_equal" | "contains" | "does_not_contain" | "starts_with" | "ends_with" | "is_empty" | "is_not_empty"
