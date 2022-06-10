@@ -25,6 +25,8 @@ type TApiHeaders = {
   "Content-Type": string
 }
 
+const baseURL = "https://api.notion.com/v1"
+
 /**
  * 
  * @param NOTION_API_KEY 
@@ -50,7 +52,7 @@ export function apiHeaders(NOTION_API_KEY: string, NOTION_VERSION = "2022-02-22"
  * - https://developers.notion.com/reference/post-database-query
  */
 export async function queryDatabase(headers: TApiHeaders, databaseId: string, body?: string): Promise<QueryDatabaseResponse> {
-  const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+  const response = await fetch(`${baseURL}/databases/${databaseId}/query`, {
     method: "POST",
     headers: headers,
     body: body ?? ""
@@ -74,7 +76,7 @@ export async function queryDatabase(headers: TApiHeaders, databaseId: string, bo
  * - https://developers.notion.com/reference/post-page
  */
 export async function createPage(headers: TApiHeaders, databaseId: string, body: string): Promise<CreatePageResponse> {
-  const response = await fetch("https://api.notion.com/v1/pages", {
+  const response = await fetch(`${baseURL}/pages`, {
     method: "POST",
     headers: headers,
     body
@@ -96,7 +98,7 @@ export async function createPage(headers: TApiHeaders, databaseId: string, body:
  * - https://developers.notion.com/reference/retrieve-a-page
  */
 export async function getPage(headers: TApiHeaders, pageId: string): Promise<GetPageResponse> {
-  const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+  const response = await fetch(`${baseURL}/pages/${pageId}`, {
     method: "GET",
     headers: headers
   })
@@ -118,7 +120,7 @@ export async function getPage(headers: TApiHeaders, pageId: string): Promise<Get
  * - https://developers.notion.com/reference/patch-page
  */
 export async function updatePageProperties(headers: TApiHeaders, pageId: string, body: string): Promise<UpdatePageResponse> {
-  const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+  const response = await fetch(`${baseURL}/pages/${pageId}`, {
     method: "PATCH",
     headers: headers,
     body
@@ -140,7 +142,7 @@ export async function updatePageProperties(headers: TApiHeaders, pageId: string,
  * - https://developers.notion.com/reference/get-block-children
  */
 export async function getPageContent(headers: TApiHeaders, pageId: string): Promise<ListBlockChildrenResponse> {
-  const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
+  const response = await fetch(`${baseURL}/blocks/${pageId}/children`, {
     method: "GET",
     headers: headers
   })
@@ -161,7 +163,7 @@ export async function getPageContent(headers: TApiHeaders, pageId: string): Prom
  * - https://developers.notion.com/reference/retrieve-a-block
  */
 export async function getBlock(headers: TApiHeaders, blockId: string): Promise<GetBlockResponse> {
-  const response = await fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
+  const response = await fetch(`${baseURL}/blocks/${blockId}`, {
     method: "GET",
     headers: headers
   })
@@ -183,7 +185,7 @@ export async function getBlock(headers: TApiHeaders, blockId: string): Promise<G
  * - https://developers.notion.com/reference/update-a-block
  */
 export async function addBlocks(headers: TApiHeaders, pageId: string, body: string): Promise<BlockObjectResponse[]> {
-  const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
+  const response = await fetch(`${baseURL}/blocks/${pageId}/children`, {
     method: "PATCH",
     headers: headers,
     body: body
@@ -206,7 +208,7 @@ export async function addBlocks(headers: TApiHeaders, pageId: string, body: stri
  * - https://developers.notion.com/reference/update-a-block
  */
 export async function updateBlock(headers: TApiHeaders, blockId: string, body: string): Promise<UpdateBlockResponse> {
-  const response = await fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
+  const response = await fetch(`${baseURL}/blocks/${blockId}`, {
     method: "PATCH",
     headers: headers,
     body: body
@@ -229,7 +231,7 @@ export async function updateBlock(headers: TApiHeaders, blockId: string, body: s
  */
 export async function deleteBlocks(headers: TApiHeaders, blockIds: string[]) {
   const deletedBlocks = await Promise.all(blockIds.map(blockId => (
-    fetch(`https://api.notion.com/v1/blocks/${blockId}`, {
+    fetch(`${baseURL}/blocks/${blockId}`, {
       method: "DELETE",
       headers: headers
     }))))
