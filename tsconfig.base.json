@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bizchain.vn/notion": ["packages/notion/src/index.ts"]
+      "@bizchain.vn/notion": ["packages/notion/src/index.ts"],
+      "@bizchain.vn/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
