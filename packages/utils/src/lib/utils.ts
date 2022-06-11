@@ -4,7 +4,7 @@ import dayjs from "dayjs"
  * @param value 
  * @returns 
  */
-export function isEmpty(value: any): boolean {
+export function isEmpty(value: unknown): boolean {
   if (value === undefined || value === null) return true
   if (typeof value === "string" && value.replaceAll(" ", "").length === 0) return true
   return false

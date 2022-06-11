@@ -41,6 +41,13 @@ export function apiHeaders(NOTION_API_KEY: string, NOTION_VERSION = "2022-02-22"
   }
 }
 
+
+/************************************************************************************************
+ * 
+ *      NOTION APIS
+ * 
+ ************************************************************************************************/
+
 /**
  * 
  * @param headers 
@@ -175,7 +182,7 @@ export async function getBlock(headers: TApiHeaders, blockId: string): Promise<G
 }
 
 /**
- * 
+ * Add one or many blocks at the same time
  * @param headers 
  * @param pageId 
  * @param body 
@@ -198,7 +205,7 @@ export async function addBlocks(headers: TApiHeaders, pageId: string, body: stri
 }
 
 /**
- * 
+ * Update only 1 block at a time
  * @param headers 
  * @param blockId 
  * @param body 
@@ -221,7 +228,7 @@ export async function updateBlock(headers: TApiHeaders, blockId: string, body: s
 }
 
 /**
- * Delete one or more blocks
+ * Delete one or many blocks at the same time
  * @param headers 
  * @param blockIds 
  * @returns 
@@ -240,11 +247,12 @@ export async function deleteBlocks(headers: TApiHeaders, blockIds: string[]) {
 }
 
 /**
- * 
+ * Return stringified object (one or many rich_text block)
+ * which is used by `addBlocks` function
  * @param texts 
  * @returns 
  */
-export function newPlainTextBlocks(texts: string[]) {
+export function newPlainTextBlocks(texts: string[]): string {
   const content = {
     "children": texts.map(text => ({
       "object": "block",
@@ -288,11 +296,12 @@ export function newPlainTextBlocks(texts: string[]) {
 // }
 
 /**
- * 
+ * Return stringified object (one rich_text block)
+ * which is used by `updateBlock` function
  * @param text 
  * @returns 
  */
-export function updatePlainTextBlock(text: string) {
+export function updatePlainTextBlock(text: string): string {
   const content = {
     "paragraph": {
       "rich_text": [
@@ -319,12 +328,14 @@ export function updatePlainTextBlock(text: string) {
 //   return updateRes
 // }
 
-/**
- * Extract page property data
- */
+/************************************************************************************************
+ * 
+ *      EXTRACT PAGE PROPERTIES VALUE
+ * 
+ ************************************************************************************************/
 
 /**
- * 
+ * Get title of a page
  * @param value 
  * @returns 
  */
@@ -333,7 +344,7 @@ export function getPageTitleValue(value: PropertyValueTitle): string {
 }
 
 /**
- * 
+ * Get plain text of a rich_text block
  * @param value 
  * @returns 
  */
@@ -392,7 +403,7 @@ export function getCheckboxValue(value: PropertyValueCheckbox): boolean | undefi
 }
 
 /**
- * 
+ * Get date value `value.date.start`
  * @param value 
  * @returns 
  */
@@ -417,6 +428,24 @@ export function getNumberValue(value: PropertyValueNumber): number | undefined {
 export function getUrlValue(value: PropertyValueUrl): string {
   return value?.url ?? ""
 }
+
+/************************************************************************************************
+ * 
+ *      GENERATE QUERY STRING FOR PAGE'S PROPERTIES
+ *      These values cannot be used directly
+ *      but used to build query string to `updatePageProperties`
+ *      
+ *      Overview object used to update page properties
+ *      ```js
+ *      query = {
+ *        "properties": {
+ *          "property_name": value (return from functions below)
+ *        }
+ *      }
+ *      JSON.stringify(query) <= use this in `updatePageProperties`
+ *      ```
+ * 
+ ************************************************************************************************/
 
 /**
  * 
@@ -508,8 +537,19 @@ export function querySingleDate(value: string) {
   }
 }
 
-/**
+/************************************************************************************************
  * 
+ *      SEARCH FOR PAGES BASED ON `RICH_TEXT` PROPERTY
+ * 
+ ************************************************************************************************/
+
+/**
+ * Generate filter string used in `queryDatabase` function
+ * Example: 
+ *      ```
+ *      queryStr = filterRichtext({..})
+ *      await queryDatabase(..., queryStr)
+ *      ```
  * @param param0 
  * @returns 
  */
@@ -520,7 +560,7 @@ export function filterRichtext({ propertyName, condition, content, timestamp, di
   timestamp?: "created_time" | "last_edited_time"
   direction?: "descending" | "ascending"
 }) {
-  const queryObj: { [key: string]: any } = {}
+  const queryObj: { [key: string]: unknown } = {}
 
   queryObj["filter"] = {
     "property": propertyName,

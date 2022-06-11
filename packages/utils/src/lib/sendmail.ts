@@ -9,7 +9,7 @@ const baseUrl = "https://api.mailjet.com/v3.1"
  * @param config 
  * @returns 
  */
-export async function sendMailJet(emailData: TEmailData, config: TMailJetConfig): Promise<any> {
+export async function sendMailJet(emailData: TEmailData, config: TMailJetConfig): Promise<unknown> {
 	const res = await fetch(`${baseUrl}/send`, {
 		method: "POST",
 		headers: {

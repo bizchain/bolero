@@ -5,7 +5,7 @@ Utils functions used by BizChain Labs
 ## Helper functions
 
 ```ts
-export function isEmpty(value: any): boolean
+export function isEmpty(value: unknown): boolean
 ```
 
 ```ts
@@ -34,7 +34,7 @@ export function isRecentlyUpdate(date: string, days: number): boolean
 
 ```ts
 //Send email via MailJet services
-export async function sendMailJet(emailData: TEmailData, config: TMailJetConfig): Promise<any>
+export async function sendMailJet(emailData: TEmailData, config: TMailJetConfig): Promise<unknown>
 ```
 
 ## React Hook
