@@ -16,6 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@bizchain.vn/notion": ["packages/notion/src/index.ts"],
+      "@bizchain.vn/svg": ["packages/svg/src/index.ts"],
+      "@bizchain.vn/ui": ["packages/ui/src/index.ts"],
       "@bizchain.vn/utils": ["packages/utils/src/index.ts"]
     }
   },

@@ -5,6 +5,7 @@
   "scripts": {},
   "private": false,
   "dependencies": {
+    "clsx": "^1.1.1",
     "dayjs": "^1.11.3",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
@@ -18,9 +19,9 @@
     "@nrwl/linter": "14.1.9",
     "@nrwl/workspace": "14.1.9",
     "@types/jest": "27.4.1",
+    "@types/lodash": "^4.14.181",
     "@types/node": "16.11.7",
     "@types/react": "^17.0.45",
-    "@types/lodash": "^4.14.181",
     "@typescript-eslint/eslint-plugin": "~5.18.0",
     "@typescript-eslint/parser": "~5.18.0",
     "eslint": "~8.12.0",

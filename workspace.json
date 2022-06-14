@@ -3,6 +3,8 @@
   "version": 2,
   "projects": {
     "notion": "packages/notion",
+    "svg": "packages/svg",
+    "ui": "packages/ui",
     "utils": "packages/utils"
   }
 }
