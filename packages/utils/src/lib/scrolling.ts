@@ -41,7 +41,7 @@ export function useScrollOver(pos: number) {
  * `minY` is the minimum distant before starting checking.
  * default is 0 for to check immediately.
  */
-export function useScrollDown(_minY: number | undefined) {
+export function useWindowScrollDown(_minY: number | undefined) {
 	const [scrolling, setScrolling] = React.useState({
 		isGoingDown: false,
 		isOnTop: true,
@@ -78,4 +78,38 @@ export function useScrollDown(_minY: number | undefined) {
 	}, [minY, scrolling.isGoingDown, scrolling.isOnTop])
 
 	return scrolling
+}
+
+export function useCustomScrollingDown(_minY: number | undefined){
+	const [scrolling, setScrolling] = React.useState({
+		isGoingDown: false,
+		isOnTop: true,
+	})
+
+	const savedScrollY = React.useRef(0)
+	const minY = _minY ?? 0
+
+	const checker = throttle((e) => {
+		const currentPos = e.target.scrollTop
+		const newState = {
+			isGoingDown:
+				(currentPos > savedScrollY.current && currentPos > minY)
+					? true
+					: false,
+			isOnTop:
+				(currentPos <= minY || currentPos < 90)
+					? true
+					: false
+		}
+		if ((newState.isGoingDown !== scrolling.isGoingDown) || (newState.isOnTop !== scrolling.isOnTop))
+			setScrolling(newState)
+			
+		savedScrollY.current = currentPos
+	}, 400)
+
+	return ({
+		checker,
+		isGoingDown: scrolling.isGoingDown,
+		isOnTop: scrolling.isOnTop
+	})
 }
