@@ -67,7 +67,7 @@ export function useWindowScrollDown(_minY: number | undefined) {
 
 			if ((newState.isGoingDown !== scrolling.isGoingDown) || (newState.isOnTop !== scrolling.isOnTop))
 				setScrolling(newState)
-				
+
 			savedScrollY.current = currentPos
 		}, 400)
 
@@ -80,10 +80,20 @@ export function useWindowScrollDown(_minY: number | undefined) {
 	return scrolling
 }
 
-export function useCustomScrollingDown(_minY: number | undefined){
+/**
+ * 
+ * @param _minY 
+ * @param scrollOver 
+ * @returns 
+ * 		- isGoingDown
+ * 		- isOnTop
+ * 		- isOver: whether user is scrolling over provided param `scrollOver`
+ */
+export function useCustomScrollingDown(_minY?: number, scrollOver?: number) {
 	const [scrolling, setScrolling] = React.useState({
 		isGoingDown: false,
 		isOnTop: true,
+		isOver: false
 	})
 
 	const savedScrollY = React.useRef(0)
@@ -99,17 +109,25 @@ export function useCustomScrollingDown(_minY: number | undefined){
 			isOnTop:
 				(currentPos <= minY || currentPos < 90)
 					? true
+					: false,
+			isOver:
+				scrollOver
+					? currentPos > scrollOver
 					: false
 		}
-		if ((newState.isGoingDown !== scrolling.isGoingDown) || (newState.isOnTop !== scrolling.isOnTop))
+		if ((newState.isGoingDown !== scrolling.isGoingDown)
+			|| (newState.isOnTop !== scrolling.isOnTop)
+			|| (newState.isOver !== scrolling.isOver)){
 			setScrolling(newState)
-			
+		}
+
 		savedScrollY.current = currentPos
 	}, 400)
 
 	return ({
 		checker,
 		isGoingDown: scrolling.isGoingDown,
-		isOnTop: scrolling.isOnTop
+		isOnTop: scrolling.isOnTop,
+		isOver: scrolling.isOver
 	})
 }
